@@ -54,3 +54,15 @@ Mental-Health-Canada-R/
 install.packages(c("dplyr", "ggplot2", "plotly", "caret", "forecast", 
                   "tseries", "shiny", "tidytext", "RedditExtractoR"))
 ```
+## 🔧 Key Technologies
+- **Programming Language**: R  
+- **Data Wrangling**: `dplyr`, `tidyr`  
+- **Visualization**: `ggplot2`, `plotly`, `ggcorrplot`  
+- **Machine Learning**: `caret`, `glm` (logistic regression)  
+- **Time-Series Forecasting**: `forecast`, `tseries`, `SARIMAX`  
+- **Natural Language Processing (NLP)**: `tidytext`, `syuzhet`  
+- **Interactive Dashboard**: Shiny  
+- **Version Control**: Git, GitHub
+
+## Author
+Felix Vo
