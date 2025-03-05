@@ -22,7 +22,7 @@ This project aims to:
 2. **CDC Behavioral Risk Data**: [BRFSS](https://www.cdc.gov/brfss/)
 3. **Social Media Data**: Reddit (r/depression, r/anxiety) via `RedditExtractoR`.
 4. **WHO Global Health Data**: [Suicide Rates by Country](https://www.who.int/data/gho).
-   
+```
 Mental-Health-Trends-Canada/
 ├── data/
 │   ├── raw/ (original CSVs from CGC/WHO/StatCan)
@@ -39,6 +39,7 @@ Mental-Health-Trends-Canada/
 ├── app/ (Shiny/PowerBI dashboard)
 ├── requirements.txt
 └── README.md
+```
 ## ⚙️ Installation
 1. Clone the repository:
    ```bash
