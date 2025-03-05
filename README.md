@@ -22,6 +22,23 @@ This project aims to:
 2. **CDC Behavioral Risk Data**: [BRFSS](https://www.cdc.gov/brfss/)
 3. **Social Media Data**: Reddit (r/depression, r/anxiety) via `RedditExtractoR`.
 4. **WHO Global Health Data**: [Suicide Rates by Country](https://www.who.int/data/gho).
+   
+Mental-Health-Trends-Canada/
+├── data/
+│   ├── raw/ (original CSVs from CGC/WHO/StatCan)
+│   ├── processed/ (cleaned datasets)
+│   └── external/ (e.g., Reddit scrapes)
+├── notebooks/
+│   ├── 1_EDA.ipynb
+│   ├── 2_Predictive_Models.ipynb
+│   └── 3_Sentiment_Analysis.ipynb
+├── models/
+│   ├── logistic_regression.pkl
+│   ├── sarimax.pkl
+│   └── lstm.h5
+├── app/ (Shiny/PowerBI dashboard)
+├── requirements.txt
+└── README.md
 
 ## ⚙️ Installation
 1. Clone the repository:
