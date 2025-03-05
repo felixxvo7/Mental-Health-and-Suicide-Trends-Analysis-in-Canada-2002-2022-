@@ -39,7 +39,6 @@ Mental-Health-Trends-Canada/
 ├── app/ (Shiny/PowerBI dashboard)
 ├── requirements.txt
 └── README.md
-
 ## ⚙️ Installation
 1. Clone the repository:
    ```bash
