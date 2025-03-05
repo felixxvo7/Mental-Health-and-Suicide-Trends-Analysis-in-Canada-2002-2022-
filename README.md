@@ -24,20 +24,25 @@ This project aims to:
 4. **WHO Global Health Data**: [Suicide Rates by Country](https://www.who.int/data/gho).
 ```
 Mental-Health-Trends-Canada/
+Mental-Health-Canada-R/
 ├── data/
-│   ├── raw/ (original CSVs from CGC/WHO/StatCan)
-│   ├── processed/ (cleaned datasets)
-│   └── external/ (e.g., Reddit scrapes)
-├── notebooks/
-│   ├── 1_EDA.ipynb
-│   ├── 2_Predictive_Models.ipynb
-│   └── 3_Sentiment_Analysis.ipynb
+│   ├── raw/
+│   │   ├── suicide_rates.csv
+│   │   ├── mental_health_indicators.csv
+│   │   └── inflation_rates.csv
+│   └── processed/
+│       └── merged_data.csv
+├── scripts/
+│   ├── 1_data_preprocessing.R
+│   ├── 2_eda.R
+│   ├── 3_modeling.R
+│   └── 4_sentiment_analysis.R
+├── app/
+│   ├── app.R (Shiny dashboard)
+│   └── saved_plots/
 ├── models/
-│   ├── logistic_regression.pkl
-│   ├── sarimax.pkl
-│   └── lstm.h5
-├── app/ (Shiny/PowerBI dashboard)
-├── requirements.txt
+│   ├── logistic_model.rds
+│   └── sarimax_model.rds
 └── README.md
 ```
 ## ⚙️ Installation
