@@ -1,0 +1,78 @@
+﻿"Archived - Suicidal thoughts and attempts, by age group and sex, household population aged 15 and over, selected provinces, territories and health regions (January 2000 boundaries) 1 2 3 4 5",,
+Frequency: Every 2 years,,
+Table: 13-10-0077-01 (formerly CANSIM 105-0070),,
+Release date: 2010-05-17,,
+Geography:,,
+,,
+,,
+,,
+,Age group,"Total, 15 years and over"
+,Sex,Both sexes
+,Characteristics 6 7 8 9,Number of persons
+Geography 3 4 5,Suicidal thoughts and attempts 2 3,2000
+,,Persons
+Nova Scotia 10,"Total, suicidal thoughts and attempts","702,242"
+,"Suicide, considered in past 12 months","10,706"
+,"Suicide, attempted in past 12 months","3,938E"
+,"Suicide, never contemplated","682,832"
+,"Suicidal thoughts and attempts, not stated","4,766E"
+New Brunswick,"Total, suicidal thoughts and attempts","571,463"
+,"Suicide, considered in past 12 months","11,253"
+,"Suicide, attempted in past 12 months","2,212E"
+,"Suicide, never contemplated","551,582"
+,"Suicidal thoughts and attempts, not stated","6,416E"
+Quebec,"Total, suicidal thoughts and attempts","5,464,086"
+,"Suicide, considered in past 12 months","144,499"
+,"Suicide, attempted in past 12 months","29,112"
+,"Suicide, never contemplated","5,223,764"
+,"Suicidal thoughts and attempts, not stated","66,712"
+Manitoba,"Total, suicidal thoughts and attempts","817,998"
+,"Suicide, considered in past 12 months","13,363"
+,"Suicide, attempted in past 12 months","2,713E"
+,"Suicide, never contemplated","794,420"
+,"Suicidal thoughts and attempts, not stated","7,502E"
+Alberta 11,"Total, suicidal thoughts and attempts","2,153,164"
+,"Suicide, considered in past 12 months","43,171"
+,"Suicide, attempted in past 12 months","8,816"
+,"Suicide, never contemplated","2,047,080"
+,"Suicidal thoughts and attempts, not stated","54,097"
+Yukon,"Total, suicidal thoughts and attempts","20,686"
+,"Suicide, considered in past 12 months",502E
+,"Suicide, attempted in past 12 months",F
+,"Suicide, never contemplated","19,001"
+,"Suicidal thoughts and attempts, not stated","1,061E"
+Northwest Territories,"Total, suicidal thoughts and attempts","27,331"
+,"Suicide, considered in past 12 months",527E
+,"Suicide, attempted in past 12 months",424E
+,"Suicide, never contemplated","25,326"
+,"Suicidal thoughts and attempts, not stated","1,054"
+Nunavut,"Total, suicidal thoughts and attempts","14,357"
+,"Suicide, considered in past 12 months",454
+,"Suicide, attempted in past 12 months",463E
+,"Suicide, never contemplated","12,927"
+,"Suicidal thoughts and attempts, not stated",513
+,,
+Symbol legend:,,
+E, use with caution,
+F, too unreliable to be published,
+,,
+,,
+,,
+,,
+Footnotes:,,
+1,"Source: Statistics Canada, Canadian Community Health Survey, 2000/2001. For more current Canadian Community Health Survey (CCHS) data, please refer to the following information <a href=http://www.statcan.gc.ca/cgi-bin/imdb/p2SV.pl?Function=getSurvey&SDDS=3226&lang=en&db=imdb&adm=8&dis=2"">CCHS</a>.""",
+2,Population 15 and over who reported on suicidal thoughts or attempts in the 12 months preceding the survey.,
+3,"Provincial estimates were given only for those provinces in which survey respondents in all health regions answered the Suicidal thoughts and attempts"" module.""",
+4,Health regions are defined by provincial governments as the areas of responsibility for regional health boards (legislated) or as regions of interest to health care authorities.,
+5,"A peer group"" is a grouping of health regions that have similar social and economic characteristics.""",
+6,Bootstrapping techniques were used to produce the coefficient of variation (CV) and 95% confidence intervals (CIs).,
+7,Data with a coefficient of variation (CV) from 16.6% to 33.3% are identified by an (E) and should be interpreted with caution.,
+8,Data with a coefficient of variation (CV) greater than 33.3% were suppressed (F) due to extreme sampling variability.,
+9,The following standard symbols are used in this Statistics Canada table: (..) for figures not available for a specific reference period and (...) for figures not applicable.,
+10,"In Nova Scotia, health regions are known as zones and relate to the province's administrative health region boundaries.",
+11,"In Alberta, health regions are referred to as Health Authorities (HA) or Regional Health Authorities (RHA).",
+,,
+,,
+,,
+"How to cite: Statistics Canada. Table 13-10-0077-01  Suicidal thoughts and attempts, by age group and sex, household population aged 15 and over, selected provinces, territories and health regions (January 2000 boundaries)",,
+https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1310007701,,

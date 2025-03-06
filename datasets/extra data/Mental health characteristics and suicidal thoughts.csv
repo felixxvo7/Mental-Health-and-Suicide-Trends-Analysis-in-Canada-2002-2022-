@@ -1,0 +1,43 @@
+﻿"Mental health characteristics and suicidal thoughts 1 2 3"
+"Frequency: Occasional"
+"Table: 13-10-0098-01 (formerly CANSIM 105-0514)"
+"Release date: 2020-08-06"
+"Geography: Province or territory"
+""
+""
+
+"Geography","Canada (excluding territories) 3"
+"Age group","Total, 12 years and over"
+"Sex","Both sexes"
+"Characteristics 4 5 6 7 8 9 10 11 12 13","Number of persons"
+"Indicators","2019"
+"Consultation with a health professional about emotional or mental health 14","4,894,400"
+"Positive mental health, flourishing 15 16","24,841,000"
+"Suicidal thoughts (15 years and over) 17","3,687,200"
+
+
+
+
+Footnotes:
+1,"Source: Statistics Canada, Canadian Community Health Survey (CCHS)"
+2,"All estimates in this table are calculated excluding non-response categories ("refusal", "don't know", and "not stated") in the denominator."
+3,"Data for the Canadian Community Health Survey (CCHS) are collected yearly from a sample of approximately 65,000 respondents."
+4,"The confidence interval illustrates the degree of variability associated with a rate. Wide confidence intervals indicate high variability, thus, these rates should be interpreted with due caution. When comparing estimates, it is important to use confidence intervals to determine if differences between values are statistically significant."
+5,"Bootstrapping techniques were used to produce the 95% confidence intervals (CIs)."
+6,"Data with a coefficient of variation (CV) from 15.1% to 35.0% are identified as follows: (E) use with caution."
+7,"Data with a coefficient of variation (CV) greater than 35.0% or that did not meet the minimum sample size requirement were suppressed due to extreme sampling variability and are identified as follows: (F) too unreliable to be published."
+8,"The following standard symbols are used in this Statistics Canada table: (..) for figures not available for a specific reference period and (...) for figures not applicable."
+9,"Percentages are rounded to the nearest tenth. Numbers are rounded to the nearest hundred."
+10,"Census population counts have been used to produce the population projection counts. These counts are used to ensure that the Statistics Canada, Canadian Community Health Survey (CCHS) weights and resulting estimates included in this table are consistent with known population totals."
+11,"Data with a coefficient of variation (CV) from 15.1% to 35.0% are identified as follows: (E) use with caution."
+12,"Percentages are rounded to the nearest tenth. Numbers are rounded to the nearest hundred."
+13,"Census population counts have been used to produce the population projection counts. These counts are used to ensure that the Canadian Community Health Survey (CCHS) weights and resulting estimates included in this table are consistent with known population totals."
+14,"Population aged 12 and over who reported that they have seen or talked to a health professional about their emotional or mental health."
+15,"Population aged 12 and over who classified as having a flourishing mental health. This classification is based on the Mental Health Continuum - Short Form (MHC-SF) instrument developed by Dr. Corey Keyes.  A flourishing mental health refers to a "high levels" of emotional well-being and positive functioning. These components are at a high level if they were experienced "everyday" or "almost every day" during the past month."
+16,"Due to content changes, this indicator is now derived from provincial data collected from a rapid response module (January to March, 2019)."
+17,"Population aged 15 and over who reported that they have seriously contemplated suicide in their life."
+
+
+
+"How to cite: Statistics Canada. Table 13-10-0098-01  Mental health characteristics and suicidal thoughts"
+https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1310009801
