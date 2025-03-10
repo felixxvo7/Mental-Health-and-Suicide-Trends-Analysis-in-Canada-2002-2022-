@@ -1,98 +1,106 @@
-# Dataset: Mental Health in Canada (2002- 2022)
+# Dataset: Mental Health in Canada (2002-2022)
 
-**File Name**: `mental health CAN 02-22.csv`
+**File Name**: `mental_health_CAN_02-22.csv`
+**Rows**: 1,609,931 · **Columns**: 18
+**Format**: Longitudinal panel data (2002-2022)
 
-Columns : 18
+---
 
-Rows: 1609931
+## Dataset Overview
 
-------------------------------------------------------------------------
+### Temporal Coverage
 
-## **Dataset Overview**
+- **Full Range**: 2002-2022 (20-year span)
+- **Measurement Frequency**: Annual
+- **Reporting Periods**:
+  - **Life**: Lifetime prevalence
+  - **12 months**: Past-year incidence
 
--   **Period** : 10 years (2012) , 20 years (2022)
+### Geographic Scope
 
-<!-- -->
+- **Coverage**: National (All Canadian territories)
+- **Granularity**: Country-level aggregation
 
--   **Geographic Coverage**: Canada (national level) , all terraroties.\
--   **Target Population**: Individuals aged **15 years and older**.\
--   **Demographic Breakdown**:
-    -   **Age Groups**:
-        -   Total (15+ years)
-        -   15–24 years
-        -   25–64 years\
-    -   **Gender Categories**:
-        -   Total (all genders)
-        -   Men+
-        -   Women+
+### Population Characteristics
 
-------------------------------------------------------------------------
+- **Target Population**: Residents aged ≥15 years
+- **Stratification**:
+  - **Age Groups**:
+    - Total (15+ years)
+    - 15–24 years (Adolescent/Young Adult)
+    - 25–64 years (Working Age)
+  - **Gender Categories**:
+    - Total (All genders)
+    - Men+ (Male-identifying individuals)
+    - Women+ (Female-identifying individuals)
 
-## **Key Variables**
+---
 
-| Column Name | Description | Example Values |
-|----|----|----|
-| `REF_DATE` | Reference year | `2002` |
-| `GEO` | Geographic location | `Canada` |
-| `Age group` | Age range of respondents | `"Total, 15 years and over"`, `"15 to 24 years"` |
-| `Gender` | Gender classification | `"Total, gender of person"`, `"Men+"`, `"Women+"` |
-| `Indicators` | Mental health condition or behavior measured | `"Major depressive episode, life"`, `"Cannabis use, 12 months"` |
-| `Characteristics` | Subtype of measurement (e.g., confidence intervals) | `"Low 95% confidence interval, number of persons"` |
-| `UOM` | Unit of measurement | `Number`, `Percent` |
-| `VALUE` | Numerical value (count or percentage) | `3037049`, `12.2` |
-| `STATUS`/`SYMBOL` | Data quality flags (e.g., `E` = high variability, `F` = suppressed) | `E`, `F` |
+## Data Structure & Variables
 
-------------------------------------------------------------------------
+### Core Variables Table
 
-## **Key Indicators & Metrics**
+| Column Name       | Description                                | Data Type | Example Values                        |
+| ----------------- | ------------------------------------------ | --------- | ------------------------------------- |
+| `REF_DATE`        | Reference year                             | Integer   | 2002, 2015, 2022                      |
+| `GEO`             | Geographic location                        | Factor    | "Canada"                              |
+| `Age group`       | Age categorization                         | Factor    | "15 to 24 years", "25-64 years"       |
+| `Gender`          | Gender classification                      | Factor    | "Men+", "Women+"                      |
+| `Indicators`      | Mental health metric (See full list below) | Factor    | "Major depressive episode, life"      |
+| `Characteristics` | Measurement context                        | Factor    | "Low 95% confidence interval"         |
+| `UOM`             | Unit of measurement                        | Factor    | "Number", "Percent"                   |
+| `VALUE`           | Quantitative value                         | Numeric   | 3037049 (count), 12.2 (percentage)    |
+| `SCALAR_FACTOR`   | Scaling factor for aggregated data         | Character | "units"                               |
+| `STATUS/SYMBOL`   | Data quality flags                         | Character | "E" (High variance), "F" (Suppressed) |
 
-### 1. **Major Depressive Episode**
+---
 
--   **Lifetime Prevalence**:
-    -   Total (15+ years): **3,037,049 persons** (12.2%).\
-    -   Men+: **1,125,806 persons** (9.2%).\
-    -   Women+: **1,911,243 persons** (15.1%).\
--   **12-Month Prevalence**:
-    -   Total (15+ years): **1,195,955 persons** (4.8%).
+## Key Mental Health Indicators
 
-### 2. **Cannabis Use**
+### Mental Health Conditions
 
--   **Lifetime Use**:
-    -   Total (15+ years): **10,315,481 persons** (41.3%).\
-    -   Men+: **5,757,706 persons** (47%).\
-    -   Women+: **4,557,775 persons** (35.9%).\
--   **12-Month Use**:
-    -   Total (15+ years): **3,049,068 persons** (12.2%).
+#### Mood Disorders
 
-### 3. **Suicidal Thoughts**
+- Major depressive episode (Life/12mo)
+- Bipolar disorder (Life/12mo)
+- Any mood disorder (Life/12mo)
 
--   **Lifetime Prevalence**:
-    -   Total (15+ years): **3,345,344 persons** (13.4%).\
-    -   Men+: **1,507,262 persons** (12.3%).\
-    -   Women+: **1,838,083 persons** (14.5%).\
--   **12-Month Prevalence**:
-    -   Total (15+ years): **919,795 persons** (3.7%).
+#### Anxiety & Trauma
 
-### 4. **Perceived Mental Health**
+- Generalized anxiety disorder (Life/12mo)
+- Social phobia (Life/12mo)
+- PTSD (Current diagnosis)
 
--   **"Very Good or Excellent"**:
-    -   Total (15+ years): **16,752,154 persons** (67.1%).\
--   **"Fair or Poor"**:
-    -   Total (15+ years): **1,715,204 persons** (6.9%).
+#### Substance Use
 
-### 5. **Work-Related Stress**
+- Cannabis use/abuse (Life/12mo)
+- Alcohol abuse/dependence (Life/12mo)
+- Other drug use (Excl. cannabis) (Life/12mo)
 
--   **"Quite a Bit/Extremely Stressful" Days**:
-    -   Total (15+ years): **5,479,419 persons** (30.7%).
+### Risk Factors & Outcomes
 
-------------------------------------------------------------------------
+- Suicidal ideation (Life/12mo)
+- Self-rated work stress levels:
+  - High stress ("Quite a bit/extremely")
+  - Moderate stress ("A bit")
+  - Low stress ("Not at all/not very")
 
-## **Data Quality Notes**
+### Clinical Diagnoses
 
-1.  **Confidence Intervals**: Provided for most estimates (e.g., lifetime major depressive episode: 2,913,405–3,160,692 persons).\
-2.  **Coefficient of Variation (CV)**:
-    -   High CV (\>33%) indicates lower precision (e.g., 12-month suicidal thoughts: CV = 44%).\
-    -   Low CV (\<15%) indicates higher reliability (e.g., perceived mental health "very good": CV = 5%).\
-3.  **Symbols**:
-    -   `E`: High variability (e.g., eating disorder estimates).\
-    -   `F`: Suppressed data (e.g., PTSD in some age/gender groups).
+- Schizophrenia/Psychosis (Ever diagnosed)
+- Eating disorders (Current diagnosis)
+- ADHD (Current diagnosis)
+
+### Perceptions & Utilization
+
+- Self-rated mental health:
+  - Very good/excellent
+  - Good
+  - Fair/poor
+- Mental health service use (12mo)
+- Unmet care needs:
+  - No need
+  - Needs met/partially met/unmet
+
+
+
