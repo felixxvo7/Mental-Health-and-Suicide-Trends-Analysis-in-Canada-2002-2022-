@@ -54,6 +54,15 @@ Mental-Health-Canada-R/
 install.packages(c("dplyr", "ggplot2", "plotly", "caret", "forecast", 
                   "tseries", "shiny", "tidytext", "RedditExtractoR"))
 ```
+
+## Dataset:
+
+The dataset contains 160,992 records and 18 columns. Key observations:
+The relevant mental health conditions are listed under the "Indicators" column.
+The dataset includes age groups, gender, and geographic location (GEO).
+The "VALUE" column represents numerical data, but some values are missing.
+Characteristics include metrics like percentage, number of persons, and confidence intervals.
+
 ## 🔧 Key Technologies
 - **Programming Language**: R  
 - **Data Wrangling**: `dplyr`, `tidyr`  

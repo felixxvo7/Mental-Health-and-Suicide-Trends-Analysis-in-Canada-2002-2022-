@@ -65,3 +65,40 @@ ggplot(final_data, aes(x = year, y = value, color = gender)) +
        x = "Year") +
   scale_x_continuous(breaks = seq(2000, 2022, 5)) +
   theme_minimal()
+
+
+library(dplyr)
+library(tidyr)
+filtered_mental_health <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/filtered_mental_health.csv")
+
+#filtered_mental_health <- filtered_mental_health %>% select(c(-UOM_ID,-SCALAR_FACTOR,-SCALAR_ID))
+# Sum of NA values by column
+na_count <- colSums(is.na(filtered_mental_health))
+
+print(na_count)
+filtered_mental_health <- filtered_mental_health %>% select(c(-SYMBOL, - TERMINATED, -VALUE))
+
+# Filter rows with any NA values
+rows_with_na <- filtered_mental_health[apply(is.na(filtered_mental_health), 1, any), ]
+
+filtered_mental_health <- filtered_mental_health%>%
+  filter(Characteristics != "Statistically different from previous reference period")
+
+
+write.csv(filtered_mental_health, "filtered_mental_health.csv", row.names = FALSE)
+print("CSV file written successfully!")
+
+filtered_mental_health <- filtered_mental_health %>% select(c(-Unit, -VECTOR, -STATUS ,-COORDINATE, - DECIMALS ))
+# Now, pivot the data based on the Indicator and Characteristics columns
+pivoted_data <- filtered_mental_health %>%
+  pivot_wider(
+    names_from = Characteristics,  # New column names will come from Characteristics
+    values_from = Value,           # Values will come from the Value column
+    names_glue = "{Characteristics}"  # Combine Characteristics and Unit for column names
+  )
+
+# View the reshaped data
+print(pivoted_data)
+
+write.csv(pivoted_data, "pivoted_filtered_mental_health", row.names = FALSE)
+print("CSV file written successfully!")

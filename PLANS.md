@@ -2,23 +2,22 @@
 
 ## Project Plan
 
-### **Phase 1: Project Setup & Data Collection**
-#### 1. Initialize Repository  
-- Set up a GitHub repository with the folder structure.
-- Create a `README.md` with project goals, dataset sources, and setup instructions.
+--
 
-#### 2. Data Acquisition  
-- Download datasets from Statistics Canada and WHO.
-- Use `RedditExtractoR` to scrape Reddit posts related to mental health.
-- Store raw data in the `data/raw/` folder.
+### **Phase 1: Data Preprocessing & Exploratory Data Analysis (EDA)**
 
-#### 3. Environment Setup  
-- Ensure R (4.3.2) is installed with required packages (`dplyr`, `ggplot2`, `caret`, etc.).
-- Set up a virtual environment using `renv` for dependency management.
+### 1.Cleaning : Choose key Indicators: Mental Health Conditions
+Major depressive episode (Life/12 months)
+Bipolar disorder (Life/12 months)
+Any mood disorder (Life/12 months)
+Generalized anxiety disorder (Life/12 months)
+Social phobia (Life/12 months)
+PTSD (Current diagnosis)
+Schizophrenia or psychosis (Ever diagnosed)
+Eating disorders (Current diagnosis)
+ADHD (Current diagnosis)
 
----
 
-### **Phase 2: Data Preprocessing & Exploratory Data Analysis (EDA)**
 #### 4. Preprocessing & Cleaning (`scripts/1_data_preprocessing.R`)
 - Handle missing values, outliers, and inconsistent data formats.
 - Merge datasets into a single structured format (`data/processed/merged_data.csv`).
@@ -30,7 +29,7 @@
 
 ---
 
-### **Phase 3: Modeling & Predictions**
+### **Phase 2: Modeling & Predictions**
 #### 6. Suicide Rate Forecasting with SARIMAX (`scripts/3_modeling.R`)
 - Train a **SARIMAX model** to forecast suicide rates using inflation and economic indicators.
 - Evaluate model performance using RMSE and AIC/BIC scores.

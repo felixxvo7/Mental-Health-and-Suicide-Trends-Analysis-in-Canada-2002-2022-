@@ -1,11 +1,32 @@
 
-library(tidyverse)
-library(lubridate)
-library(plotly)
+data<- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/raw/mental health CAN 02-22.csv")
 
 
-mental_health <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/raw/mental health CAN 02-22.csv") %>%
-  mutate(Year = (REF_DATE))
+# Handle missing values
+mental_health <- mental_health %>%
+  filter(!is.na(VALUE) & VALUE != "")
+
+mental_health <- mental_health %>%
+  rename(
+    Year = REF_DATE,
+    Geography = GEO,
+    Age_Group = `Age.group`,
+    Unit = UOM
+  ) %>%
+  mutate(
+    Year = as.numeric(Year),
+    Value = as.numeric(VALUE)
+  )
+
+mental_health <- mental_health %>%
+  mutate(
+    Age_Group = case_when(
+      Age_Group == "Total, 15 years and over" ~ "15+ Years",
+      Age_Group == "15 to 24 years" ~ "15-24 Years",
+      Age_Group == "25 to 64 years" ~ "25-64 Years",
+      TRUE ~ Age_Group
+    )
+  )
 
 
 depression_trend <- mental_health %>%
@@ -97,3 +118,20 @@ mental_health[, .(Avg_Percent = mean(VALUE, na.rm = TRUE)),
               by = .(Year, Gender, Indicators)]
 
 
+
+library(ggplot2)
+library(dplyr)
+
+# Aggregate by Year and Indicator
+mental_health_trend <- data %>%
+  group_by(REF_DATE, Indicators) %>%
+  summarize(Mean_Value = mean(VALUE, na.rm = TRUE))
+
+# Plot Trends Over Time
+ggplot(mental_health_trend, aes(x = REF_DATE, y = Mean_Value, color = Indicators)) +
+  geom_line(size = 1) +
+  labs(title = "Mental Health Trends in Canada (2002-2022)",
+       x = "Year",
+       y = "Prevalence (%)",
+       color = "Mental Health Condition") +
+  theme_minimal()

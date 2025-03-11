@@ -1,0 +1,117 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+```{r}
+library(tidyverse)
+library(plotly)
+library(scales)
+```
+
+## Preprocessing pipeline
+
+```{r}
+
+mental_health <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/raw/mental health CAN 02-22.csv")
+
+
+mental_health <- mental_health %>%
+  rename(
+    Year = REF_DATE,
+    Geography = GEO,
+    Age_Group = `Age.group`,
+    Unit = UOM
+  ) %>%
+  mutate(
+    Year = as.numeric(Year),
+    Value = as.numeric(VALUE)
+  )
+
+mental_health <- mental_health %>%
+  mutate(
+    Age_Group = case_when(
+      Age_Group == "Total, 15 years and over" ~ "Total 15++ Years",
+      Age_Group == "15 to 24 years" ~ "15-24 Years",
+      Age_Group == "25 to 64 years" ~ "25-64 Years",
+      TRUE ~ Age_Group
+    )
+  )
+# Summary statistics
+str(mental_health)
+unique(mental_health$Indicators)
+```
+### Filter for key mental health indicators
+```{r}
+key_indicators <- c(
+    "Major depressive episode, life", "Major depressive episode, 12 months",
+    "Bipolar disorder, life", "Bipolar disorder, 12 months",
+    "Any mood disorder, life", "Any mood disorder, 12 months",
+    "Generalized anxiety disorder, life", "Generalized anxiety disorder, 12 months",
+    "Social phobia, life", "Social phobia, 12 months",
+    "PTSD, current diagnosis", "Schizophrenia or psychosis, ever diagnosed",
+    "Eating disorders, current diagnosis", "ADHD, current diagnosis"
+)
+
+write.csv(filtered_df, "filtered_mental_health.csv", row.names = FALSE)
+print("CSV file written successfully!")
+```
+
+```{r}
+# Aggregate data by year and indicators
+trend_data <- filtered_df %>%
+  filter(VALUE > 0) %>%  # Remove negative or missing values
+  group_by(Year, Indicators) %>%
+  summarise(Avg_Value = mean(VALUE, na.rm = TRUE))
+
+# Line plot to visualize trends over time
+ggplot(trend_data, aes(x = Year, y = Avg_Value, color = Indicators)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Trends in Mental Health Conditions Over Time",
+       x = "Year", y = "Average Cases") +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+ggplot(filtered_df, aes(x = Indicators, y = VALUE, fill = Indicators)) +
+  geom_boxplot(outlier.color = "red", outlier.shape = 1) +
+  theme_minimal() +
+  labs(title = "Distribution of Mental Health Indicators",
+       x = "Condition", y = "Number of Cases") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+### Bar Chart: Mental Health Conditions by Gender AND age group
+```{r}
+
+ggplot(filtered_df, aes(x = Indicators, y = VALUE, fill = Gender)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Comparison of Mental Health Conditions by Gender",
+       x = "Condition", y = "Number of Cases") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(filtered_df, aes(x = Age_Group, y = VALUE, fill = Age_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Mental Health Cases Across Age Groups",
+       x = "Age Group", y = "Number of Cases") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+```{r}
+library(corrplot) 
+# ----- 5️⃣ Correlation Heatmap (If Numeric Data is Available) -----
+ggplot(filtered_df, aes(x = Year, y = VALUE, color = Indicators)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Trends in Mental Health Conditions Over Time",
+       x = "Year", y = "Average Cases") +
+  theme(legend.position = "bottom")
+```
+
+
