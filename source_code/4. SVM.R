@@ -55,3 +55,76 @@ ggplot(data = df_clean, aes(x = predicted, y = residuals)) +
   labs(title = "Residuals vs. Predicted Values",
        x = "Predicted Percent", y = "Residuals") +
   theme_minimal()
+
+
+# Load necessary libraries
+library(e1071)  # For SVM
+library(caret)  # For model evaluation
+
+# Load dataset
+df <- read.csv("pivoted_filtered_mental_health.csv")
+
+# Remove missing values
+df_clean <- na.omit(df)
+
+# Convert Percent into a categorical variable: High vs. Low
+median_percent <- median(df_clean$Percent, na.rm = TRUE)
+df_clean$RiskLevel <- ifelse(df_clean$Percent > median_percent, "High", "Low")
+df_clean$RiskLevel <- as.factor(df_clean$RiskLevel)  # Convert to factor
+
+# Train an SVM model
+svm_model <- svm(RiskLevel ~ Year + Age_Group + Gender + Geography, 
+                 data = df_clean, kernel = "radial")
+
+# Model summary
+summary(svm_model)
+
+# Predict on the dataset
+df_clean$Predicted <- predict(svm_model, df_clean)
+
+# Confusion Matrix (Model Performance)
+confusionMatrix(df_clean$Predicted, df_clean$RiskLevel)
+
+
+# R Code: SVM for Classification
+
+# Convert Percent into a categorical variable: High vs. Low
+median_percent <- median(df_clean$Percent, na.rm = TRUE)
+df_clean$RiskLevel <- ifelse(df_clean$Percent > median_percent, "High", "Low")
+df_clean$RiskLevel <- as.factor(df_clean$RiskLevel)  # Convert to factor
+
+# Train an SVM model
+svm_model <- svm(RiskLevel ~ Year + Age_Group + Gender + Geography, 
+                 data = df_clean, kernel = "radial")
+
+# Model summary
+#### summary(svm_model)
+
+# Predict on the dataset
+df_clean$Predicted <- predict(svm_model, df_clean)
+
+# Confusion Matrix (Model Performance)
+conf_matrix <- confusionMatrix(df_clean$Predicted, df_clean$RiskLevel)
+print(conf_matrix)
+
+# Extract key metrics
+accuracy <- conf_matrix$overall["Accuracy"]
+precision <- conf_matrix$byClass["Pos Pred Value"]
+recall <- conf_matrix$byClass["Sensitivity"]
+f1_score <- conf_matrix$byClass["F1"]
+
+# Print key metrics
+print(paste("Accuracy:", accuracy))
+print(paste("Precision:", precision))
+print(paste("Recall:", recall))
+print(paste("F1 Score:", f1_score))
+
+# Plot the confusion matrix
+ggplot(as.data.frame(conf_matrix$table), aes(x = Reference, y = Prediction, fill = Freq)) +
+  geom_tile() +
+  geom_text(aes(label = Freq), color = "white", size = 6) +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  labs(title = "Confusion Matrix",
+       x = "Actual Risk Level",
+       y = "Predicted Risk Level") +
+  theme_minimal()
