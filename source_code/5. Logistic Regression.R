@@ -1,99 +1,39 @@
+# Load necessary libraries
+library(caret)  # For data preprocessing & evaluation
 
-library(tidyverse)
-library(lubridate)
-library(plotly)
+# Load the dataset
+df <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/pivoted_filtered_mental_health.csv")
 
+# ---- 1. Data Preprocessing ----
 
-mental_health <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/raw/mental health CAN 02-22.csv") %>%
-  mutate(Year = (REF_DATE))
+# Remove missing values
+df_clean <- na.omit(df)
 
+# Convert 'Percent' into a categorical variable: "High" vs. "Low"
+median_percent <- median(df_clean$Percent, na.rm = TRUE)
+df_clean$RiskLevel <- ifelse(df_clean$Percent > median_percent, "High", "Low")
+df_clean$RiskLevel <- as.factor(df_clean$RiskLevel)  # Convert to factor
 
-depression_trend <- mental_health %>%
-  filter(Indicators == "Major depressive episode, life",
-         Characteristics == "Percent") %>%
-  group_by(Year, Gender) %>%
-  summarise(Avg_Percent = mean(VALUE, na.rm = TRUE), .groups = "drop")
+# ---- 2. Train Logistic Regression Model ----
 
+# Train a logistic regression model
+log_model <- glm(RiskLevel ~ Year + Age_Group + Gender + Geography, 
+                 data = df_clean, family = "binomial")
 
-ggplotly(
-  ggplot(depression_trend, aes(x = Year, y = Avg_Percent, color = Gender)) +
-    geom_line(linewidth = 1) +
-    geom_point(size = 2) +
-    labs(title = "Depression Trends (2002-2022)",
-         y = "Percentage", x = "Year") +
-    theme_minimal() +
-    scale_color_brewer(palette = "Set1")
-)
+# Print summary of the model
+summary(log_model)
 
-# 2. Demographic Heatmap 
-cannabis_use_matrix <- mental_health %>%
-  filter(Indicators == "Cannabis use, life",
-         Characteristics == "Percent") %>%
-  group_by(Year, `Age.group`) %>%
-  summarise(Usage_Percent = mean(VALUE, na.rm = TRUE), .groups = "drop") %>%
-  complete(Year, `Age.group`, fill = list(Usage_Percent = NA))
+# ---- 3. Model Evaluation ----
 
-ggplot(cannabis_use_matrix, aes(x = Year, y = `Age.group`, fill = Usage_Percent)) +
-  geom_tile(color = "white") +
-  scale_fill_viridis_c(name = "Usage %", option = "magma") +
-  labs(title = "Cannabis Use Patterns by Age Group",
-       x = "Year", y = "Age Group") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# Predict probabilities
+df_clean$Predicted_Prob <- predict(log_model, type = "response")
 
-# 3. Faceted Violin Plots
-mental_health %>%
-  filter(grepl("Suicidal thoughts", Indicators),
-         Characteristics == "Percent") %>%
-  ggplot(aes(x = Gender, y = VALUE, fill = Gender)) +
-  geom_violin(alpha = 0.7) +
-  geom_boxplot(width = 0.1, fill = "white") +
-  facet_grid(Indicators ~ `Age.group`, scales = "free_y") +
-  labs(title = "Suicidal Thoughts Distribution by Demographic Groups",
-       y = "Percentage", x = "") +
-  theme_bw() +
-  theme(legend.position = "bottom")
+# Convert probabilities to binary predictions (Threshold = 0.5)
+df_clean$Predicted_Class <- ifelse(df_clean$Predicted_Prob > 0.5, "High", "Low")
+df_clean$Predicted_Class <- as.factor(df_clean$Predicted_Class)
 
-# 4. Animated Bubble Chart 
-library(gganimate)
+# Create a confusion matrix
+conf_matrix <- confusionMatrix(df_clean$Predicted_Class, df_clean$RiskLevel)
 
-mental_health %>%
-  filter(Characteristics == "Percent",
-         Indicators %in% c("Major depressive episode, life",
-                           "Cannabis use, life")) %>%
-  group_by(Year, Indicators, `Age.group`) %>%
-  summarise(Avg_Percent = mean(VALUE, na.rm = TRUE), .groups = "drop") %>%
-  ggplot(aes(x = `Age.group`, y = Avg_Percent, 
-             size = Avg_Percent, color = Indicators)) +
-  geom_point(alpha = 0.7) +
-  scale_size(range = c(3, 12)) +
-  scale_color_brewer(palette = "Dark2") +
-  labs(title = "Year: {frame_time}", 
-       x = "Age Group", y = "Percentage") +
-  theme_minimal() +
-  transition_time(Year) +
-  ease_aes("linear")
-
-# 5. Streamgraph for Composition
-library(ggstream)
-
-mental_health %>%
-  filter(Indicators == "Perceived mental health, very good or excellent",
-         Characteristics == "Percent") %>%
-  group_by(Year, Gender) %>%
-  summarise(Percent = mean(VALUE, na.rm = TRUE), .groups = "drop") %>%
-  ggplot(aes(x = Year, y = Percent, fill = Gender)) +
-  geom_stream(type = "proportional") +
-  labs(title = "Changing Composition of Mental Health Perceptions",
-       x = "Year", y = "Proportion") +
-  scale_fill_brewer(palette = "Pastel1") +
-  theme_minimal()
-
-# For better performance with large datasets:
-library(data.table)
-setDT(mental_health) # Convert to data.table
-
-mental_health[, .(Avg_Percent = mean(VALUE, na.rm = TRUE)), 
-              by = .(Year, Gender, Indicators)]
-
-
+# Print confusion matrix
+print(conf_matrix)
