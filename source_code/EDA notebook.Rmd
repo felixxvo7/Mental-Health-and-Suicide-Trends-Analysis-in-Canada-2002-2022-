@@ -10,6 +10,11 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 library(tidyverse)
 library(plotly)
 library(scales)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggthemes)
+
 ```
 
 ## Preprocessing pipeline
@@ -46,35 +51,22 @@ unique(mental_health$Indicators)
 ```
 ### Filter for key mental health indicators
 ```{r}
-key_indicators <- c(
-    "Major depressive episode, life", "Major depressive episode, 12 months",
-    "Bipolar disorder, life", "Bipolar disorder, 12 months",
-    "Any mood disorder, life", "Any mood disorder, 12 months",
-    "Generalized anxiety disorder, life", "Generalized anxiety disorder, 12 months",
-    "Social phobia, life", "Social phobia, 12 months",
-    "PTSD, current diagnosis", "Schizophrenia or psychosis, ever diagnosed",
-    "Eating disorders, current diagnosis", "ADHD, current diagnosis"
-)
-
-write.csv(filtered_df, "filtered_mental_health.csv", row.names = FALSE)
-print("CSV file written successfully!")
+df <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/pivoted_filtered_mental_health.csv")
 ```
 
 ```{r}
-# Aggregate data by year and indicators
-trend_data <- filtered_df %>%
-  filter(VALUE > 0) %>%  # Remove negative or missing values
-  group_by(Year, Indicators) %>%
-  summarise(Avg_Value = mean(VALUE, na.rm = TRUE))
 
-# Line plot to visualize trends over time
-ggplot(trend_data, aes(x = Year, y = Avg_Value, color = Indicators)) +
-  geom_line() +
-  geom_point() +
-  theme_minimal() +
-  labs(title = "Trends in Mental Health Conditions Over Time",
-       x = "Year", y = "Average Cases") +
-  theme(legend.position = "bottom")
+# Check for missing values
+missing_vals <- colSums(is.na(df))
+print(missing_vals)
+
+# Plot missing values
+missing_df <- data.frame(Column = names(missing_vals), Missing = missing_vals)
+ggplot(missing_df, aes(x = reorder(Column, -Missing), y = Missing)) +
+  geom_bar(stat = "identity", fill = "red") +
+  coord_flip() +
+  labs(title = "Missing Values in Each Column", x = "Columns", y = "Count of Missing Values") +
+  theme_minimal()
 ```
 
 ```{r}
@@ -114,4 +106,79 @@ ggplot(filtered_df, aes(x = Year, y = VALUE, color = Indicators)) +
   theme(legend.position = "bottom")
 ```
 
+### ---- Distribution of Mental Health Percentages ----
+```{r}
+ggplot(df, aes(x = Percent)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "black", alpha = 0.7) +
+  geom_density(aes(y=..density..*30), color="red", size=1) +
+  labs(title = "Distribution of Mental Health Percentages", x = "Percent", y = "Frequency") +
+  theme_minimal()
+```
+
+### # ---- Trend Over Time ----
+```{r}
+df %>%
+  group_by(Year) %>%
+  summarise(Average_Percent = mean(Percent, na.rm = TRUE)) %>%
+  ggplot(aes(x = Year, y = Average_Percent)) +
+  geom_line(color = "blue", size = 1) +
+  geom_point(color = "red", size = 2) +
+  labs(title = "Trend of Mental Health Issues Over Time", x = "Year", y = "Average Percentage Affected") +
+  theme_minimal()
+```
+
+### ---- Age and Gender Group Comparison ----
+```{r}
+# ---- Gender Comparison ----
+ggplot(df, aes(x = Gender, y = Percent, fill = Gender)) +
+  geom_boxplot() +
+  labs(title = "Comparison of Mental Health Issues by Gender", x = "Gender", y = "Percent") +
+  theme_minimal()
+
+# ---- Age Group Comparison ----
+ggplot(df, aes(x = Age_Group, y = Percent, fill = Age_Group)) +
+  geom_boxplot() +
+  coord_flip() + # Flip for better readability
+  labs(title = "Comparison of Mental Health Issues by Age Group", x = "Age Group", y = "Percent") +
+  theme_minimal()
+```
+### ---- Geography Comparison ----
+```{r}
+ggplot(df, aes(x = Geography, y = Percent, fill = Geography)) +
+  geom_boxplot() +
+  coord_flip() +
+  labs(title = "Comparison of Mental Health Issues by Geography", x = "Geography", y = "Percent") +
+  theme_minimal()
+```
+### ---- Bar Plot: Most Common Mental Health Indicators ---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggthemes)
+library(reshape2)
+library(corrplot)
+df %>%
+  count(Indicators, sort = TRUE) %>%
+  top_n(10, n) %>%  # Show only top 10 indicators
+  ggplot(aes(x = reorder(Indicators, n), y = n, fill = Indicators)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Top 10 Most Reported Mental Health Indicators", x = "Indicators", y = "Count") +
+  theme_minimal()
+
+
+```
+### ---- Facet Grid: Trend Over Time by Age Group ---
+```{r}
+df %>%
+  group_by(Year, Age_Group) %>%
+  summarise(Average_Percent = mean(Percent, na.rm = TRUE)) %>%
+  ggplot(aes(x = Year, y = Average_Percent, color = Age_Group)) +
+  geom_line(size = 1) +
+  facet_wrap(~ Age_Group, scales = "free_y") +
+  labs(title = "Trend of Mental Health Issues Over Time by Age Group", x = "Year", y = "Average Percentage") +
+  theme_minimal()
+```
 
