@@ -1,78 +1,61 @@
-# AI-Driven Mental Health Trend Analysis & Prediction Using R
+# Mental Health and Suicide Trends Analysis (2002–2022)
 
-## Project Plan
+## 1. Tentative Analysis Questions
 
---
+### 1. Descriptive Analysis
 
-### **Phase 1: Data Preprocessing & Exploratory Data Analysis (EDA)**
+-   How have mental health indicators changed over time (2002, 2012, 2022) across different demographics (age, province, sex)?
+-   What are the suicide rate trends in Canada over the 20-year period? and demographic wise?
+-   Are there provincial variations in mental health indicators and suicide rates?
+-   How have inflation and CPI trends varied across provinces over time?
 
-### 1.Cleaning : Choose key Indicators: Mental Health Conditions
-Major depressive episode (Life/12 months)
-Bipolar disorder (Life/12 months)
-Any mood disorder (Life/12 months)
-Generalized anxiety disorder (Life/12 months)
-Social phobia (Life/12 months)
-PTSD (Current diagnosis)
-Schizophrenia or psychosis (Ever diagnosed)
-Eating disorders (Current diagnosis)
-ADHD (Current diagnosis)
+### 2. Inferential Analysis & Hypothesis Testing
 
+-   Is there a statistically significant relationship between mental health disorders and suicide rates?
+-   Do certain demographic groups (age, sex, province) have significantly higher suicide rates?
+-   Has inflation (CPI) and Inflation rate impacted suicide rates or mental health disorder prevalence?
 
-#### 4. Preprocessing & Cleaning (`scripts/1_data_preprocessing.R`)
-- Handle missing values, outliers, and inconsistent data formats.
-- Merge datasets into a single structured format (`data/processed/merged_data.csv`).
+### 3. Predictive Analysis
 
-#### 5. Exploratory Data Analysis (`scripts/2_eda.R`)
-- Generate visualizations of suicide trends by age, gender, and economic indicators.
-- Perform geospatial analysis (heatmaps for suicide rates per province).
-- Correlation analysis between suicide rates and inflation/mental health indicators.
+-   Can we accurately predict high-risk groups for suicide using mental health indicators and economic factors (CPI, inflation)?
+-   Which mental health disorders have the strongest association with suicide rates?
+-   Which machine learning model (Random Forest, SVM, Logistic Regression) performs best in predicting suicide risk?
+-   How well do mental health disorders correlate with suicide trends across provinces and demographic groups?
+-   Which factors (mental health indicators, economic conditions, demographics) contribute most to suicide risk?
 
----
+### 4.Trend & Sentiment Analysis (Reddit Data Integration)
 
-### **Phase 2: Modeling & Predictions**
-#### 6. Suicide Rate Forecasting with SARIMAX (`scripts/3_modeling.R`)
-- Train a **SARIMAX model** to forecast suicide rates using inflation and economic indicators.
-- Evaluate model performance using RMSE and AIC/BIC scores.
-- Save the trained model in `models/sarimax_model.rds`.
-- **Segmented SARIMAX Analysis:**
-  - Train separate SARIMAX models for different **age groups** (e.g., 15-24, 25-44, 45-64, 65+).
-  - Fit models for **male vs. female** trends.
-  - Perform **regional** forecasting by province/territory.
-  - Analyze trends based on **economic vulnerability** (low-income vs. high-income groups).
-  - Examine mental health patterns in **Indigenous communities** vs. the general population.
+-   How do public discussions on mental health (from Reddit sentiment analysis) align with actual suicide rates and disorder prevalence?
+-   Can we detect emerging mental health crises using Reddit sentiment trends?
 
-#### 7. High-Risk Group Prediction using Logistic Regression
-- Train a logistic regression model to classify high-risk demographics.
-- Feature selection and performance evaluation (AUC, Precision-Recall).
-- Save the trained model in `models/logistic_model.rds`.
+## 2. Methods:
 
----
+### 1. Preprocessing:
 
-### **Phase 4: Sentiment Analysis & NLP**
-#### 8. Reddit Sentiment Analysis (`scripts/4_sentiment_analysis.R`)
-- Perform text preprocessing (tokenization, stop-word removal).
-- Use `tidytext` to calculate sentiment scores over time.
-- Visualize sentiment trends in relation to real-world events (e.g., pandemic).
+-   Handling missing data using imputation techniques.
+-   Standardization & Normalization of numerical data (CPI, inflation, suicide rates).
 
----
+### 2. Modeling:
 
-### **Phase 5: Dashboard & Visualization**
-#### 9. Develop a Shiny Dashboard (`app/app.R`)
-- **Tabs for:**  
-  - Suicide trends over time  
-  - Forecasting results  
-  - High-risk demographics  
-  - Sentiment analysis visualizations  
-- Deploy on **ShinyApps.io** or local hosting.
+#### 1. Logistic Regression:
 
----
+Baseline model for binary classification (e.g., high vs. low suicide risk).
 
-### **Phase 6: Deployment & Documentation**
-#### 10. Code Optimization & Documentation
-- Add comments and explanations in scripts.
-- Create a `requirements.txt` for package dependencies (`renv::snapshot()`).
+#### 2. SVM
 
-#### 11. Final Report & Presentation
-- Prepare insights, findings, and recommendations based on analysis.
-- Create a research paper or blog post summarizing key trends.
+Detect complex patterns in suicide risk classification based on mental health and economic factors.
 
+#### 3. Random Forest
+
+Identify feature importance and non-linear relationships between predictors and suicide risk.
+
+### 3. Sentiment Analysis on Reddit Data
+
+-   Scrape/Collect Reddit posts related to mental health using API or datasets.
+-   Perform Sentiment Analysis (VADER, TextBlob, or BERT-based models).
+-   Compare sentiment trends with actual suicide rates (correlation analysis, time-series comparisons).
+-   Topic Modeling (LDA) to find recurring themes in mental health discussions.
+
+### 4. Model Interpretation & Insights
+
+Feature Importance from Random Forest to rank key predictors. SHAP (SHapley Additive Explanations) Analysis to explain ML model predictions. Trend Visualization (Heatmaps, Time-Series Charts, Word Clouds for Reddit).
