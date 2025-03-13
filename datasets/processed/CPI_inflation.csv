@@ -1,0 +1,43 @@
+"Geo","Year","CPI","Inflation_rate"
+"Canada",2002,100,2.3
+"Canada",2012,121.7,1.5
+"Canada",2022,141.9,6.8
+"Newfoundland and Labrador",2002,100,2.4
+"Newfoundland and Labrador",2012,123.7,2.1
+"Newfoundland and Labrador",2022,144.2,7
+"Prince Edward Island",2002,100,2.6
+"Prince Edward Island",2012,125.7,2
+"Prince Edward Island",2022,146.8,8.1
+"Nova Scotia",2002,100,2.9
+"Nova Scotia",2012,124.9,1.9
+"Nova Scotia",2022,145.3,7.3
+"New Brunswick",2002,100,3.1
+"New Brunswick",2012,123.8,1.7
+"New Brunswick",2022,144,7
+"Quebec",2002,100,2
+"Quebec",2012,120.7,2.1
+"Quebec",2022,139.5,6.7
+"Ontario",2002,100,2.2
+"Ontario",2012,121.5,1.4
+"Ontario",2022,141,6.6
+"Manitoba",2002,100,1.5
+"Manitoba",2012,124.8,1.6
+"Manitoba",2022,146,7.8
+"Saskatchewan",2002,100,2.8
+"Saskatchewan",2012,125.3,1.7
+"Saskatchewan",2022,147.1,6.5
+"Alberta",2002,100,3.4
+"Alberta",2012,127.7,1.1
+"Alberta",2022,148.9,6.6
+"British Columbia",2002,100,2.3
+"British Columbia",2012,118.9,1.1
+"British Columbia",2022,137.6,6.9
+"Yukon",2002,100,0.7
+"Yukon",2012,122,1.8
+"Yukon",2022,143.5,6.2
+"Northwest Territories",2002,100,2.9
+"Northwest Territories",2012,123.9,1.6
+"Northwest Territories",2022,145,5.9
+"Nunavut",2002,100,1.2
+"Nunavut",2012,116.8,2
+"Nunavut",2022,138.2,5.7

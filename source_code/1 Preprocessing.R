@@ -2,76 +2,28 @@
 library(tidyverse)
 library(dplyr)
 library(tidyr)
+library(readxl)
 
-mental_health <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/raw/mental health CAN 02-22.csv")
+Inflation <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/raw/Inflation.csv", header=TRUE)
+CPI <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/raw/CPI.csv")
+suicide_rate <- read_excel("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/suicide rate raww.xlsx")
 
+Inflation_long <- Inflation %>%
+  pivot_longer(cols = starts_with("X"), names_to = "Year", values_to = "Value_Measurement") %>%
+  mutate(Year = str_remove(Year, "X") %>% as.integer())  # Remove "X" and convert to integer
+# Convert Year to integer
 
-mental_health <- mental_health %>%
-  rename(
-    Year = REF_DATE,
-    Geography = GEO,
-    Age_Group = `Age.group`,
-    Unit = UOM
-  ) %>%
-  mutate(
-    Year = as.numeric(Year),
-    Value = as.numeric(VALUE)
-  )
+CPI_long <- CPI %>%
+  pivot_longer(cols = starts_with("X"), names_to = "Year", values_to = "Value_Measurement") %>%
+  mutate(Year = str_remove(Year, "X") %>% as.integer())
 
-mental_health <- mental_health %>%
-  mutate(
-    Age_Group = case_when(
-      Age_Group == "Total, 15 years and over" ~ "Total 15++ Years",
-      Age_Group == "15 to 24 years" ~ "15-24 Years",
-      Age_Group == "25 to 64 years" ~ "25-64 Years",
-      TRUE ~ Age_Group
-    )
-  )
-# Summary statistics
-str(mental_health)
-unique(mental_health$Indicators)
+merged_df <- CPI_long %>%
+  left_join(Inflation_long, by = c("Geo", "Year"))
 
+merged_df <- merged_df %>%
+  rename(CPI= Value_Measurement.x) %>%
+  rename(Inflation_rate = Value_Measurement.y)
 
-key_indicators <- c("Major depressive episode, life",
-                    "Bipolar disorder, life",
-                    "Any mood disorder, life",
-                    "Generalized anxiety disorder, life",
-                    "Social phobia, life",
-                    "PTSD (Current diagnosis)",
-                    "Schizophrenia or psychosis, ever received diagnosis",
-                    "Eating disorder, current diagnosed condition",
-                    "ADHD (Current diagnosis)",
-                    "Suicidal thoughts, 12 months",
-                    "Suicidal thoughts, life")
-
-# Subset data for key indicators
-filtered_mental_health <- mental_health %>% filter(Indicators %in% key_indicators)
-
-#filtered_mental_health <- filtered_mental_health %>% select(c(-UOM_ID,-SCALAR_FACTOR,-SCALAR_ID))
-# Sum of NA values by column
-na_count <- colSums(is.na(filtered_mental_health))
-
-print(na_count)
-filtered_mental_health <- filtered_mental_health %>% select(c(-SYMBOL, - TERMINATED, -VALUE))
-
-# Filter rows with any NA values
-rows_with_na <- filtered_mental_health[apply(is.na(filtered_mental_health), 1, any), ]
-
-filtered_mental_health <- filtered_mental_health%>%
-  filter(Characteristics != "Statistically different from previous reference period")
-
-
-filtered_mental_health <- filtered_mental_health %>% select(c(-Unit, -VECTOR, -STATUS ,-COORDINATE, - DECIMALS, -UOM_ID, -SCALAR_FACTOR, -SCALAR_ID ))
-# Now, pivot the data based on the Indicator and Characteristics columns
-pivoted_data <- filtered_mental_health %>%
-  pivot_wider(
-    names_from = Characteristics,  # New column names will come from Characteristics
-    values_from = Value,           # Values will come from the Value column
-    names_glue = "{Characteristics}"  # Combine Characteristics and Unit for column names
-  )
-
-# View the reshaped data
-print(pivoted_data)
-
-write.csv(pivoted_data, "pivoted_filtered_mental_health.csv", row.names = FALSE)
+merged_df
+write.csv(merged_df, "CPI_inflation.csv", row.names = FALSE)
 print("CSV file written successfully!")

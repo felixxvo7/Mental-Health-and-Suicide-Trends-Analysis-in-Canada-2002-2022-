@@ -1,15 +1,15 @@
-Province/Territory,2002,2012,2022
-Canada,100.0,121.7,141.9
-Newfoundland and Labrador,100.0,123.7,144.2
-Prince Edward Island,100.0,125.7,146.8
-Nova Scotia,100.0,124.9,145.3
-New Brunswick,100.0,123.8,144.0
-Quebec,100.0,120.7,139.5
-Ontario,100.0,121.5,141.0
-Manitoba,100.0,124.8,146.0
-Saskatchewan,100.0,125.3,147.1
-Alberta,100.0,127.7,148.9
-British Columbia,100.0,118.9,137.6
-Yukon,100.0,122.0,143.5
-Northwest Territories,100.0,123.9,145.0
-Nunavut,100.0,116.8,138.2
+Geo,2002,2012,2022
+Canada,100,121.7,141.9
+Newfoundland and Labrador,100,123.7,144.2
+Prince Edward Island,100,125.7,146.8
+Nova Scotia,100,124.9,145.3
+New Brunswick,100,123.8,144
+Quebec,100,120.7,139.5
+Ontario,100,121.5,141
+Manitoba,100,124.8,146
+Saskatchewan,100,125.3,147.1
+Alberta,100,127.7,148.9
+British Columbia,100,118.9,137.6
+Yukon,100,122,143.5
+Northwest Territories,100,123.9,145
+Nunavut,100,116.8,138.2

@@ -1,10 +1,10 @@
-Province/Territory,2002 Inflation Rate (%),2012 Inflation Rate (%),2022 Inflation Rate (%)
+Geo,2002,2012,2022
 Canada,2.3,1.5,6.8
-Newfoundland and Labrador,2.4,2.1,7.0
-Prince Edward Island,2.6,2.0,8.1
+Newfoundland and Labrador,2.4,2.1,7
+Prince Edward Island,2.6,2,8.1
 Nova Scotia,2.9,1.9,7.3
-New Brunswick,3.1,1.7,7.0
-Quebec,2.0,2.1,6.7
+New Brunswick,3.1,1.7,7
+Quebec,2,2.1,6.7
 Ontario,2.2,1.4,6.6
 Manitoba,1.5,1.6,7.8
 Saskatchewan,2.8,1.7,6.5
@@ -12,4 +12,4 @@ Alberta,3.4,1.1,6.6
 British Columbia,2.3,1.1,6.9
 Yukon,0.7,1.8,6.2
 Northwest Territories,2.9,1.6,5.9
-Nunavut,1.2,2.0,5.7
+Nunavut,1.2,2,5.7
