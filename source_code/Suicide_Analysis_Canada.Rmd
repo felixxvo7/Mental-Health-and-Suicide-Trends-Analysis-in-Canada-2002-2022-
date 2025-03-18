@@ -1,0 +1,81 @@
+---
+title: "Suicide Rate Trends in Canada (2002–2022)"
+output: html_document
+---
+
+## **1. Load Libraries and Data**
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries}
+# Load necessary libraries
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+```
+
+```{r load-data}
+# Load the dataset (update file path if needed)
+df_suicide <- read_excel("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/suicide rate.xlsx")
+
+# Filter for Canada only
+df_canada <- df_suicide %>% filter(Geo == "Canada")
+
+# Display first few rows
+head(df_canada)
+```
+
+---
+
+## **2. Suicide Trends Over Time (Total in Canada)**
+```{r suicide-trend-over-time}
+# Aggregate total suicides by year for Canada
+suicide_trend_canada <- df_canada %>%
+  group_by(Year) %>%
+  summarise(Total_Suicides = sum(Total, na.rm = TRUE))
+
+# Plot suicide trends over time
+ggplot(suicide_trend_canada, aes(x=Year, y=Total_Suicides)) +
+  geom_line(color="blue", size=1) +
+  geom_point(color="red", size=2) +
+  theme_minimal() +
+  labs(title="Suicide Trends in Canada (2002-2022)",
+       x="Year", y="Total Suicides")
+```
+
+---
+
+## **3. Suicide Trends by Gender (Canada)**
+```{r suicide-trend-gender}
+# Group by year and gender for Canada
+suicide_by_gender <- df_canada %>%
+  group_by(Year, Gender) %>%
+  summarise(Total_Suicides = sum(Total, na.rm = TRUE))
+
+# Plot suicide trends by gender in Canada
+ggplot(suicide_by_gender, aes(x=Year, y=Total_Suicides, color=Gender, group=Gender)) +
+  geom_line(size=1) +
+  geom_point(size=2) +
+  theme_minimal() +
+  labs(title="Suicide Trends by Gender in Canada (2002-2022)",
+       x="Year", y="Total Suicides") +
+  scale_color_manual(values=c("blue", "pink", "black"))
+```
+
+---
+
+## **4. Suicide Rate per 100,000 Population (Canada)**
+```{r suicide-rate-trend}
+# Plot suicide rate trends over time for Canada
+ggplot(df_canada, aes(x=Year, y=rate, color=Gender)) +
+  geom_line(size=1, alpha=0.8) +
+  theme_minimal() +
+  labs(title="Suicide Rate per 100,000 Population in Canada (2002-2022)",
+       x="Year", y="Suicide Rate") +
+  scale_color_manual(values=c("blue", "pink", "black")) +
+  theme(legend.position="bottom")
+```
+

@@ -1,121 +1,42 @@
 ---
-title: "Descriptive Analysis"
-output:
-  pdf_document: default
-  html_notebook: default
+title: "Mental Health and Suicide Trends Analysis (2002–2022)"
+output: html_document
 ---
-## Library import
-```{r}
-packageUrl <- "https://cran.r-project.org/src/contrib/Archive/sf/sf_0.9-0.tar.gz"
 
-install.packages(packageUrl, repos=NULL, type = "source")
+## 1. Descriptive Analysis 
+
+- How have **mental health indicators** changed over time (**2002, 2012, 2022**) across different demographics (age, province, sex) at both **individual and provincial levels**?
+- What are the **suicide rate trends in Canada** over the 20-year period?  
+  - How do suicide rates vary across different **demographic groups (age, sex, ethnicity, income level)?**  
+  - How do suicide rates vary at the **province level**? Are certain provinces disproportionately affected?
+- Are there **regional disparities** in mental health conditions and suicide rates?  
+  - Which **provinces have the highest vs. lowest rates** of mental health disorders and suicide?  
+- How have **economic indicators (CPI, inflation, unemployment)** varied across provinces over time?  
+  - Does economic distress correlate with worsening mental health trends?
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-# Load libraries
-library(dplyr)
+```{r load-packages}
+# Load necessary libraries
+library(tidyverse)
 library(ggplot2)
-library(sf)                   
-library(rnaturalearth)         # For map data
-library(rnaturalearthdata)
-library(readxl)
+library(dplyr)
 ```
 
-## Load and clean the dataset
-```{r}
-mental_health <-read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/pivoted_filtered_mental_health.csv")
-CPI_inflation <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/CPI_inflation.csv")
-
-suicide_data <- read_excel("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/suicide rate.xlsx")
-colnames(suicide_rate)
+```{r load-data}
+df <- read.csv("C:/Users/felix/Downloads/cleaned_mental_health_data.csv", header=TRUE)
+View(df)
 ```
 
-```{r}
-mental_health <- mental_health %>%
-  select(Year, Geography, Age_Group, Gender, Indicators, Percent) %>%
-  rename(Province = Geography, Prevalence = Percent)
+```{r exploratory-analysis}
 
-# Convert necessary columns to factors
-mental_health <- mental_health %>%
-  mutate(Year = as.factor(Year),
-         Province = as.factor(Province),
-         Age_Group = as.factor(Age_Group),
-         Gender = as.factor(Gender),
-         Indicators = as.factor(Indicators))
-
+summary(df)
+glimpse(df)
 ```
 
-## Summarize Trends Over Time
-```{r}
-
-```
-
-## Suicide rates
-```{r}
-# Select relevant columns and rename them for clarity
-suicide_data <- suicide_data %>%
-  select(Year, Geo, rate) %>%
-  rename(Province = Geo, Suicide_Rate = rate)
-
-# Convert columns to appropriate data types
-suicide_data <- suicide_data %>%
-  mutate(Year = as.factor(Year),
-         Province = as.factor(Province),
-         Suicide_Rate = as.numeric(Suicide_Rate))
-
-# Filter for years of interest (2002, 2012, 2022)
-suicide_filtered <- suicide_data %>%
-  filter(Year %in% c("2002", "2012", "2022"))
-
-# View cleaned data
-head(suicide_filtered)
-
-```
-### Bar Plot: Suicide Count by Province
-```{r}
-ggplot(suicide_filtered, aes(x = Province, y = Suicide_Count, fill = Year)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  theme_minimal() +
-  labs(title = "Total Suicides by Province (2002, 2012, 2022) - Excluding Canada",
-       x = "Province",
-       y = "Total Suicides",
-       fill = "Year") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
-
-```
-### Line Plot: Suicide Trends Over Time
-```{r}
-# Load Canadian provinces shapefile
-canada_map <- ne_states(country = "canada", returnclass = "sf")
-
-# Check province names in the map data
-unique(canada_map$name)
-
-```
-
-```{r}
-# Ensure province names match before merging
-suicide_filtered <- suicide_filtered %>%
-  mutate(Province = case_when(
-    Province == "Newfoundland" ~ "Newfoundland and Labrador",
-    Province == "PEI" ~ "Prince Edward Island",
-    TRUE ~ as.character(Province)
-  ))
-
-# Merge spatial data with suicide counts
-map_data_joined <- canada_map %>%
-  left_join(suicide_filtered, by = c("name" = "Province"))
-
-```
-```{r}
-ggplot(data = map_data_joined) +
-  geom_sf(aes(fill = Suicide_Count), color = "black") +
-  scale_fill_gradient(low = "lightblue", high = "red", name = "Suicide Count") +
-  theme_minimal() +
-  labs(title = "Geographic Distribution of Suicide Counts in Canada (2002-2022)",
-       x = "",
-       y = "") +
-  facet_wrap(~Year)  # Separate maps for each year
+```{r visualization-example}
 
 ```
 
