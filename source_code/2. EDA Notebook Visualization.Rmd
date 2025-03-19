@@ -1,11 +1,9 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 ```{r}
 library(tidyverse)
 library(plotly)
@@ -14,6 +12,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(ggthemes)
+library(corrplot)
 
 ```
 
@@ -70,7 +69,8 @@ ggplot(missing_df, aes(x = reorder(Column, -Missing), y = Missing)) +
 ```
 
 ```{r}
-ggplot(filtered_df, aes(x = Indicators, y = VALUE, fill = Indicators)) +
+filtered_df<- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/cleaned_mental_health_data.csv")
+ggplot(filtered_df, aes(x = Indicators, y = Number.of.persons, fill = Indicators)) +
   geom_boxplot(outlier.color = "red", outlier.shape = 1) +
   theme_minimal() +
   labs(title = "Distribution of Mental Health Indicators",
@@ -80,14 +80,14 @@ ggplot(filtered_df, aes(x = Indicators, y = VALUE, fill = Indicators)) +
 ### Bar Chart: Mental Health Conditions by Gender AND age group
 ```{r}
 
-ggplot(filtered_df, aes(x = Indicators, y = VALUE, fill = Gender)) +
+ggplot(filtered_df, aes(x = Indicators, y = Number.of.persons, fill = Gender)) +
   geom_bar(stat = "identity", position = "dodge") +
   theme_minimal() +
   labs(title = "Comparison of Mental Health Conditions by Gender",
        x = "Condition", y = "Number of Cases") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-ggplot(filtered_df, aes(x = Age_Group, y = VALUE, fill = Age_Group)) +
+ggplot(filtered_df, aes(x = Age_Group, y = Number.of.persons, fill = Age_Group)) +
   geom_bar(stat = "identity", position = "dodge") +
   theme_minimal() +
   labs(title = "Mental Health Cases Across Age Groups",
@@ -97,7 +97,7 @@ ggplot(filtered_df, aes(x = Age_Group, y = VALUE, fill = Age_Group)) +
 ```{r}
 library(corrplot) 
 # ----- 5️⃣ Correlation Heatmap (If Numeric Data is Available) -----
-ggplot(filtered_df, aes(x = Year, y = VALUE, color = Indicators)) +
+ggplot(filtered_df, aes(x = Year, y = Number.of.persons, color = Indicators)) +
   geom_line() +
   geom_point() +
   theme_minimal() +
@@ -108,7 +108,7 @@ ggplot(filtered_df, aes(x = Year, y = VALUE, color = Indicators)) +
 
 ### ---- Distribution of Mental Health Percentages ----
 ```{r}
-ggplot(df, aes(x = Percent)) +
+ggplot(filtered_df, aes(x = Percent)) +
   geom_histogram(bins = 30, fill = "steelblue", color = "black", alpha = 0.7) +
   geom_density(aes(y=..density..*30), color="red", size=1) +
   labs(title = "Distribution of Mental Health Percentages", x = "Percent", y = "Frequency") +
@@ -117,7 +117,7 @@ ggplot(df, aes(x = Percent)) +
 
 ### # ---- Trend Over Time ----
 ```{r}
-df %>%
+filtered_df %>%
   group_by(Year) %>%
   summarise(Average_Percent = mean(Percent, na.rm = TRUE)) %>%
   ggplot(aes(x = Year, y = Average_Percent)) +
@@ -130,13 +130,13 @@ df %>%
 ### ---- Age and Gender Group Comparison ----
 ```{r}
 # ---- Gender Comparison ----
-ggplot(df, aes(x = Gender, y = Percent, fill = Gender)) +
+ggplot(filtered_df, aes(x = Gender, y = Percent, fill = Gender)) +
   geom_boxplot() +
   labs(title = "Comparison of Mental Health Issues by Gender", x = "Gender", y = "Percent") +
   theme_minimal()
 
 # ---- Age Group Comparison ----
-ggplot(df, aes(x = Age_Group, y = Percent, fill = Age_Group)) +
+ggplot(filtered_df, aes(x = Age_Group, y = Percent, fill = Age_Group)) +
   geom_boxplot() +
   coord_flip() + # Flip for better readability
   labs(title = "Comparison of Mental Health Issues by Age Group", x = "Age Group", y = "Percent") +
@@ -144,7 +144,7 @@ ggplot(df, aes(x = Age_Group, y = Percent, fill = Age_Group)) +
 ```
 ### ---- Geography Comparison ----
 ```{r}
-ggplot(df, aes(x = Geography, y = Percent, fill = Geography)) +
+ggplot(filtered_df, aes(x = Geography, y = Percent, fill = Geography)) +
   geom_boxplot() +
   coord_flip() +
   labs(title = "Comparison of Mental Health Issues by Geography", x = "Geography", y = "Percent") +
@@ -159,7 +159,7 @@ library(tidyr)
 library(ggthemes)
 library(reshape2)
 library(corrplot)
-df %>%
+filtered_df %>%
   count(Indicators, sort = TRUE) %>%
   top_n(10, n) %>%  # Show only top 10 indicators
   ggplot(aes(x = reorder(Indicators, n), y = n, fill = Indicators)) +
@@ -172,7 +172,7 @@ df %>%
 ```
 ### ---- Facet Grid: Trend Over Time by Age Group ---
 ```{r}
-df %>%
+filtered_df %>%
   group_by(Year, Age_Group) %>%
   summarise(Average_Percent = mean(Percent, na.rm = TRUE)) %>%
   ggplot(aes(x = Year, y = Average_Percent, color = Age_Group)) +

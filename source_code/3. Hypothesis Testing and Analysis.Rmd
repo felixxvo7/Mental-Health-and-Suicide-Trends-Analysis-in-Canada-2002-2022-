@@ -1,0 +1,19 @@
+---
+title: "Hypothesis Testing"
+author: "Felix Vo"
+date: "2025-03-18"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+

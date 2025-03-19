@@ -27,7 +27,7 @@ mental_health <- mental_health %>%
       TRUE ~ Age_Group
     )
   )
-# Summary statistics
+
 str(mental_health)
 unique(mental_health$Indicators)
 
@@ -44,17 +44,12 @@ key_indicators <- c("Major depressive episode, life",
                     "Suicidal thoughts, 12 months",
                     "Suicidal thoughts, life")
 
-# Subset data for key indicators
 filtered_mental_health <- mental_health %>% filter(Indicators %in% key_indicators)
-
-#filtered_mental_health <- filtered_mental_health %>% select(c(-UOM_ID,-SCALAR_FACTOR,-SCALAR_ID))
-# Sum of NA values by column
 na_count <- colSums(is.na(filtered_mental_health))
-
 print(na_count)
-filtered_mental_health <- filtered_mental_health %>% select(c(-SYMBOL, - TERMINATED, -VALUE))
 
-# Filter rows with any NA values
+
+filtered_mental_health <- filtered_mental_health %>% select(c(-SYMBOL, - TERMINATED, -VALUE))
 rows_with_na <- filtered_mental_health[apply(is.na(filtered_mental_health), 1, any), ]
 
 filtered_mental_health <- filtered_mental_health%>%
@@ -62,15 +57,14 @@ filtered_mental_health <- filtered_mental_health%>%
 
 
 filtered_mental_health <- filtered_mental_health %>% select(c(-Unit, -VECTOR, -STATUS ,-COORDINATE, - DECIMALS, -UOM_ID, -SCALAR_FACTOR, -SCALAR_ID ))
-# Now, pivot the data based on the Indicator and Characteristics columns
+
 pivoted_data <- filtered_mental_health %>%
   pivot_wider(
-    names_from = Characteristics,  # New column names will come from Characteristics
-    values_from = Value,           # Values will come from the Value column
-    names_glue = "{Characteristics}"  # Combine Characteristics and Unit for column names
+    names_from = Characteristics,  
+    values_from = Value,           
+    names_glue = "{Characteristics}" 
   )
 
-# View the reshaped data
 print(pivoted_data)
 
 write.csv(pivoted_data, "pivoted_filtered_mental_health.csv", row.names = FALSE)
