@@ -1,130 +1,33 @@
-# Load necessary libraries
-library(e1071)  # For SVM
-library(tidyverse)
-library(caret)  # For evaluation metrics
+library(caret)
+library(dplyr)
+library(readr)
+library(tidyr)
+library(kernlab)
 
-# Load the dataset
-df <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/pivoted_filtered_mental_health.csv")
+mental_health_data <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/merged_suicide_mental_health_data.csv")
+economic_data <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/CPI_inflation.csv")
 
-# Remove rows with missing values
-df_clean <- na.omit(df)
+mental_health_indicators <- c("Major depressive episode, life", "Eating disorder, current diagnosed condition",
+                              "Social phobia, life", "Generalized anxiety disorder, life", "Bipolar disorder, life")
+target <- "Suicidal thoughts, life"
 
-###_____________________REGRESSION________________________
-# Train an SVM regression model
-svm_reg <- svm(Percent ~ Year + Age_Group + Gender + Geography, 
-               data = df_clean, kernel = "radial")
+merged_data <- mental_health_data %>%
+  filter(Indicators %in% c(mental_health_indicators, target)) %>%
+  select(Year, Geography, Age_Group, Gender, Indicators, Percentage) %>%
+  pivot_wider(names_from = Indicators, values_from = Percentage) %>%
+  drop_na() %>%
+  merge(economic_data, by.x = c("Year", "Geography"), by.y = c("Year", "Geo"), all.x = TRUE)
 
-# Model summary
-summary(svm_reg)
+merged_data[c("CPI", "Inflation_rate")][is.na(merged_data[c("CPI", "Inflation_rate")])] <- apply(merged_data[c("CPI", "Inflation_rate")], 2, median, na.rm = TRUE)
 
-# Predict on the dataset
-df_clean$Predicted_Percent <- predict(svm_reg, df_clean)
+X <- merged_data[, c(mental_health_indicators, "CPI", "Inflation_rate")]
+y <- ifelse(merged_data[[target]] > median(merged_data[[target]], na.rm = TRUE), 1, 0)
 
-# Plot actual vs. predicted values
-ggplot(df_clean, aes(x = Percent, y = Predicted_Percent)) +
-  geom_point(color = "blue", alpha = 0.5) +
-  geom_smooth(method = "lm", color = "red") +
-  labs(title = "Actual vs. Predicted Mental Health Percentage",
-       x = "Actual Percent", y = "Predicted Percent") +
-  theme_minimal()
+cv_folds <- trainControl(method = "cv", number = 10, sampling = "up", search = "grid")
 
-###_____________________EVALUATION________________________
-# Calculate evaluation metrics
-actual <- df_clean$Percent
-predicted <- df_clean$Predicted_Percent
+tune_grid <- expand.grid(sigma = 10^seq(-3, 1, length.out = 5), C = 10^seq(-2, 2, length.out = 5))
 
-# 1. Root Mean Squared Error (RMSE)
-rmse <- sqrt(mean((actual - predicted)^2))
-print(paste("RMSE:", rmse))
+svm_model <- train(as.factor(y) ~ ., data = data.frame(scale(X), y = as.factor(y)),
+                   method = "svmRadial", trControl = cv_folds, tuneGrid = tune_grid)
 
-# 2. Mean Absolute Error (MAE)
-mae <- mean(abs(actual - predicted))
-print(paste("MAE:", mae))
-
-# 3. R-squared (Coefficient of Determination)
-ss_total <- sum((actual - mean(actual))^2)
-ss_residual <- sum((actual - predicted)^2)
-r_squared <- 1 - (ss_residual / ss_total)
-print(paste("R-squared:", r_squared))
-
-# 4. Residuals Plot (to check for patterns)
-residuals <- actual - predicted
-ggplot(data = df_clean, aes(x = predicted, y = residuals)) +
-  geom_point(color = "blue", alpha = 0.5) +
-  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
-  labs(title = "Residuals vs. Predicted Values",
-       x = "Predicted Percent", y = "Residuals") +
-  theme_minimal()
-
-
-# Load necessary libraries
-library(e1071)  # For SVM
-library(caret)  # For model evaluation
-
-# Load dataset
-df <- read.csv("pivoted_filtered_mental_health.csv")
-
-# Remove missing values
-df_clean <- na.omit(df)
-
-# Convert Percent into a categorical variable: High vs. Low
-median_percent <- median(df_clean$Percent, na.rm = TRUE)
-df_clean$RiskLevel <- ifelse(df_clean$Percent > median_percent, "High", "Low")
-df_clean$RiskLevel <- as.factor(df_clean$RiskLevel)  # Convert to factor
-
-# Train an SVM model
-svm_model <- svm(RiskLevel ~ Year + Age_Group + Gender + Geography, 
-                 data = df_clean, kernel = "radial")
-
-# Model summary
-summary(svm_model)
-
-# Predict on the dataset
-df_clean$Predicted <- predict(svm_model, df_clean)
-
-# Confusion Matrix (Model Performance)
-confusionMatrix(df_clean$Predicted, df_clean$RiskLevel)
-
-
-# R Code: SVM for Classification
-
-# Convert Percent into a categorical variable: High vs. Low
-median_percent <- median(df_clean$Percent, na.rm = TRUE)
-df_clean$RiskLevel <- ifelse(df_clean$Percent > median_percent, "High", "Low")
-df_clean$RiskLevel <- as.factor(df_clean$RiskLevel)  # Convert to factor
-
-# Train an SVM model
-svm_model <- svm(RiskLevel ~ Year + Age_Group + Gender + Geography, 
-                 data = df_clean, kernel = "radial")
-
-# Model summary
-#### summary(svm_model)
-
-# Predict on the dataset
-df_clean$Predicted <- predict(svm_model, df_clean)
-
-# Confusion Matrix (Model Performance)
-conf_matrix <- confusionMatrix(df_clean$Predicted, df_clean$RiskLevel)
-print(conf_matrix)
-
-# Extract key metrics
-accuracy <- conf_matrix$overall["Accuracy"]
-precision <- conf_matrix$byClass["Pos Pred Value"]
-recall <- conf_matrix$byClass["Sensitivity"]
-f1_score <- conf_matrix$byClass["F1"]
-
-# Print key metrics
-print(paste("Accuracy:", accuracy))
-print(paste("Precision:", precision))
-print(paste("Recall:", recall))
-print(paste("F1 Score:", f1_score))
-
-# Plot the confusion matrix
-ggplot(as.data.frame(conf_matrix$table), aes(x = Reference, y = Prediction, fill = Freq)) +
-  geom_tile() +
-  geom_text(aes(label = Freq), color = "white", size = 6) +
-  scale_fill_gradient(low = "lightblue", high = "darkblue") +
-  labs(title = "Confusion Matrix",
-       x = "Actual Risk Level",
-       y = "Predicted Risk Level") +
-  theme_minimal()
+cat("Optimized Cross-Validation Accuracy (SVM):", mean(svm_model$results$Accuracy))

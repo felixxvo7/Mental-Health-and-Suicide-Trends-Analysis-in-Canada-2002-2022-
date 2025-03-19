@@ -1,39 +1,47 @@
-# Load necessary libraries
-library(caret)  # For data preprocessing & evaluation
+library(caret)
+library(dplyr)
+library(readr)
+library(ggplot2)
 
-# Load the dataset
-df <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/pivoted_filtered_mental_health.csv")
+mental_health_data <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/merged_suicide_mental_health_data.csv")
+economic_data <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/CPI_inflation.csv")
 
-# ---- 1. Data Preprocessing ----
+mental_health_indicators <- c("Major depressive episode, life", 
+                              "Eating disorder, current diagnosed condition",
+                              "Social phobia, life", 
+                              "Generalized anxiety disorder, life",
+                              "Bipolar disorder, life")
 
-# Remove missing values
-df_clean <- na.omit(df)
+target <- "Suicidal thoughts, life"
 
-# Convert 'Percent' into a categorical variable: "High" vs. "Low"
-median_percent <- median(df_clean$Percent, na.rm = TRUE)
-df_clean$RiskLevel <- ifelse(df_clean$Percent > median_percent, "High", "Low")
-df_clean$RiskLevel <- as.factor(df_clean$RiskLevel)  # Convert to factor
+mental_health_filtered <- mental_health_data %>%
+  filter(Indicators %in% c(mental_health_indicators, target)) %>%
+  select(Year, Geography, Age_Group, Gender, Indicators, Percentage)
 
-# ---- 2. Train Logistic Regression Model ----
+mental_health_wide <- mental_health_filtered %>%
+  tidyr::pivot_wider(names_from = Indicators, values_from = Percentage) %>%
+  drop_na()
 
-# Train a logistic regression model
-log_model <- glm(RiskLevel ~ Year + Age_Group + Gender + Geography, 
-                 data = df_clean, family = "binomial")
+merged_data <- merge(mental_health_wide, economic_data, by.x = c("Year", "Geography"), by.y = c("Year", "Geo"), all.x = TRUE)
 
-# Print summary of the model
-summary(log_model)
+for (col in c("CPI", "Inflation_rate")) {
+  merged_data[[col]][is.na(merged_data[[col]])] <- median(merged_data[[col]], na.rm = TRUE)
+}
 
-# ---- 3. Model Evaluation ----
+features <- c(mental_health_indicators, "CPI", "Inflation_rate")
+X <- merged_data[, features]
+y <- merged_data[[target]]
 
-# Predict probabilities
-df_clean$Predicted_Prob <- predict(log_model, type = "response")
+y <- ifelse(y > median(y, na.rm = TRUE), 1, 0)
 
-# Convert probabilities to binary predictions (Threshold = 0.5)
-df_clean$Predicted_Class <- ifelse(df_clean$Predicted_Prob > 0.5, "High", "Low")
-df_clean$Predicted_Class <- as.factor(df_clean$Predicted_Class)
+X_scaled <- scale(X)
 
-# Create a confusion matrix
-conf_matrix <- confusionMatrix(df_clean$Predicted_Class, df_clean$RiskLevel)
+cv_folds <- trainControl(method = "cv", number = 5)
 
-# Print confusion matrix
-print(conf_matrix)
+logistic_model <- train(as.factor(y) ~ ., 
+                        data = data.frame(X_scaled, y = as.factor(y)),
+                        method = "glm",
+                        family = "binomial",
+                        trControl = cv_folds)
+
+cat("Cross-Validation Accuracy:", mean(logistic_model$results$Accuracy))

@@ -13,6 +13,7 @@ df<- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suic
 # How have mental health indicators changes across age, province, genders in 2002-2012-2022 ???
 
 ## BY AGE 
+
 ### Group data by year and age group
 age_trends <- df %>%
   filter(Age_Group != "Total 15++ Years")%>%
@@ -36,7 +37,6 @@ province_trends <- df %>%
   group_by(Year, Geography) %>%
   summarise(Average_MH_Indicator = mean(Percent, na.rm = TRUE))
 
-# Facet grid for better comparison
 ggplot(province_trends, aes(x=Year, y=Average_MH_Indicator, color=Geography)) +
   geom_line(size=1) +
   geom_point(size=2) +
@@ -167,6 +167,9 @@ df_wide <- df_canada %>%
 cor_matrix <- df_wide %>%
   select(-Year, -Gender) %>% 
   cor(use = "pairwise.complete.obs") 
+
+write.csv(cor_matrix, "correlation_matrix.csv", row.names = FALSE)
+print("CSV file written successfully!")
 
 cor_long <- melt(cor_matrix)
 
