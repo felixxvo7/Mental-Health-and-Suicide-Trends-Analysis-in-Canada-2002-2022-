@@ -9,11 +9,232 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R
+```{r}
+#Import libraries:
+library(tidyverse)
+library(knitr)
+```
 
+# Hypothesis Testing:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+-   **Statistical relationship between mental health disorder and number of commit suicide**
+
+```{r mental health data, echo=FALSE}
+mental_health_data <- read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/merged_suicide_mental_health_data.csv")
+```
+
+```{r}
+
+df_canada <- mental_health_data %>%
+  filter(Geography == "Canada", Gender == "Total, gender of person")
+suicide_indicator <- "Commit Suicide"
+
+mental_health_indicators <- c("Major depressive episode, life", 
+                              "Eating disorder, current diagnosed condition",
+                              "Suicidal thoughts, life", 
+                              "Suicidal thoughts, 12 months",
+                              "Social phobia, life", 
+                              "Generalized anxiety disorder, life",
+                              "Bipolar disorder, life")
+
+df_filtered <- df_canada %>%
+  filter(Indicators %in% c(suicide_indicator, mental_health_indicators)) %>%
+  select(Year, Indicators, Population) %>%
+  group_by(Year, Indicators) %>%
+  summarise(Population = sum(Population, na.rm = TRUE), .groups = "drop")
+
+df_pivot <- df_filtered %>%
+  pivot_wider(names_from = Indicators, values_from = Population)
+
+print(df_pivot)
+
+```
+
+```{r}
+# Handle missing values (replace NA with median)
+df_pivot_filled <- df_pivot %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), median(., na.rm = TRUE), .)))
+
+# Correlation analysis
+cor_results <- data.frame(
+  Indicator = character(),
+  Correlation = numeric(),
+  t_value = numeric(),
+  p_value = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (indicator in mental_health_indicators) {
+  if (indicator %in% colnames(df_pivot_filled)) {
+    cor_test <- cor.test(df_pivot_filled[[indicator]], df_pivot_filled[["Commit Suicide"]])
+    cor_results <- rbind(cor_results, data.frame(
+      Indicator = indicator,
+      Correlation = round(cor_test$estimate, 3),
+      t_value = round(cor_test$statistic, 3),
+      p_value = round(cor_test$p.value, 4)
+    ))
+  } else {
+    cor_results <- rbind(cor_results, data.frame(
+      Indicator = indicator,
+      Correlation = NA,
+      t_value = NA,
+      p_value = NA
+    ))
+  }
+}
+
+# Display results in a table
+kable(cor_results, caption = "Pearson Correlation Between Mental Health Indicators and Suicide Rates")
+```
+
+## Suicide Thoughts with other Indicators Pearson correlation test
+
+```{r}
+suicide_indicators <- c("Suicidal thoughts, life", "Suicidal thoughts, 12 months")
+
+mental_health_indicators <- c("Major depressive episode, life", 
+                              "Eating disorder, current diagnosed condition",
+                              "Social phobia, life", 
+                              "Generalized anxiety disorder, life",
+                              "Bipolar disorder, life")
+
+df_filtered <- df_canada %>%
+  filter(Indicators %in% c(suicide_indicators, mental_health_indicators)) %>%
+  select(Year, Indicators, Population) %>%
+  group_by(Year, Indicators) %>%
+  summarise(Population = sum(Population, na.rm = TRUE), .groups = "drop")  
+
+df_pivot <- df_filtered %>%
+  pivot_wider(names_from = Indicators, values_from = Population)
+
+df_pivot_filled <- df_pivot %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), median(., na.rm = TRUE), .)))
+
+cor_results <- data.frame(
+  Indicator = character(),
+  Suicide_Indicator = character(),
+  Correlation = numeric(),
+  t_value = numeric(),
+  p_value = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (suicide in suicide_indicators) {
+  for (indicator in mental_health_indicators) {
+    if (indicator %in% colnames(df_pivot_filled) && suicide %in% colnames(df_pivot_filled)) {
+      cor_test <- cor.test(df_pivot_filled[[indicator]], df_pivot_filled[[suicide]])
+      cor_results <- rbind(cor_results, data.frame(
+        Indicator = indicator,
+        Suicide_Indicator = suicide,
+        Correlation = round(cor_test$estimate, 3),
+        t_value = round(cor_test$statistic, 3),
+        p_value = round(cor_test$p.value, 4)
+      ))
+      
+      print(paste("Correlation between", indicator, "and", suicide, ":"))
+      print(cor_test)
+      cat("\n")
+    } else {
+      cor_results <- rbind(cor_results, data.frame(
+        Indicator = indicator,
+        Suicide_Indicator = suicide,
+        Correlation = NA,
+        t_value = NA,
+        p_value = NA
+      ))
+    }
+  }
+}
+
+kable(cor_results, caption = "Pearson Correlation Between Mental Health Indicators and Suicidal Thoughts")
+```
+
+## Summary Table
+
+| **Mental Health Indicator** | **Suicide Indicator** | **Correlation (r)** | **t-value** | **p-value** | **Significance** |
+|------------|------------|------------|------------|------------|------------|
+| **Major depressive episode, life** | Suicidal thoughts, life | **0.9997** | 38.093 | **0.0167** | **Significant** |
+| **Eating disorder, current diagnosed condition** | Suicidal thoughts, life | 0.9880 | 6.3971 | 0.0987 | Not significant |
+| **Social phobia, life** | Suicidal thoughts, life | NA | NA | NA | Not available |
+| **Generalized anxiety disorder, life** | Suicidal thoughts, life | 0.8236 | 1.452 | 0.384 | Not significant |
+| **Bipolar disorder, life** | Suicidal thoughts, life | 0.8236 | 1.452 | 0.384 | Not significant |
+| **Major depressive episode, life** | Suicidal thoughts, 12 months | **0.9999** | 83.325 | **0.0076** | **Significant** |
+| **Eating disorder, current diagnosed condition** | Suicidal thoughts, 12 months | 0.9857 | 5.8497 | 0.1078 | Not significant |
+| **Social phobia, life** | Suicidal thoughts, 12 months | NA | NA | NA | Not available |
+| **Generalized anxiety disorder, life** | Suicidal thoughts, 12 months | 0.8154 | 1.4086 | 0.393 | Not significant |
+| **Bipolar disorder, life** | Suicidal thoughts, 12 months | 0.8154 | 1.4086 | 0.393 | Not significant |
+
+------------------------------------------------------------------------
+
+```{r}
+economic_data  <-read.csv("C:/Users/felix/Desktop/CODING/felix's works/Mental-Health-On-Suicide-Rates-Trend-Analysis-Prediction/datasets/processed/CPI_inflation.csv")
+```
+```{r}
+economic_canada <- economic_data %>%
+  filter(Geo == "Canada") %>%
+  select(Year, CPI, Inflation_rate)
+
+suicide_indicators <- c("Suicidal thoughts, life", "Suicidal thoughts, 12 months")
+
+suicide_canada <- df_canada %>%
+  filter(Geography == "Canada", Gender == "Total, gender of person", Indicators %in% suicide_indicators) %>%
+  select(Year, Indicators, Population) %>%
+  group_by(Year, Indicators) %>%
+  summarise(Population = sum(Population, na.rm = TRUE), .groups = "drop")
+
+# Convert suicide data to wide format
+suicide_pivot <- suicide_canada %>%
+  pivot_wider(names_from = Indicators, values_from = Population)
+
+# Merge suicide and economic data
+merged_data <- merge(suicide_pivot, economic_canada, by = "Year", all.x = TRUE)
+
+# Display merged data
+kable(merged_data, caption = "Merged Economic and Suicide Data in Canada")
 ```
 
 
+```{r}
+# Correlation Analysis
+cor_results <- data.frame(
+  Suicide_Indicator = character(),
+  Economic_Indicator = character(),
+  Correlation = numeric(),
+  p_value = numeric(),
+  stringsAsFactors = FALSE
+)
+
+economic_indicators <- c("CPI", "Inflation_rate")
+
+for (suicide in suicide_indicators) {
+  for (economic in economic_indicators) {
+    if (suicide %in% colnames(merged_data) && economic %in% colnames(merged_data)) {
+      cor_test <- cor.test(merged_data[[suicide]], merged_data[[economic]])
+      cor_results <- rbind(cor_results, data.frame(
+        Suicide_Indicator = suicide,
+        Economic_Indicator = economic,
+        Correlation = round(cor_test$estimate, 3),
+        p_value = round(cor_test$p.value, 4)
+      ))
+      
+      print(paste("Correlation between", suicide, "and", economic, ":"))
+      print(cor_test)
+      cat("\n")
+    }
+  }
+}
+
+# Display correlation results
+kable(cor_results, caption = "Correlation Between Economic Indicators and Suicidal Thoughts")
+```
+
+#### Inflation Rate has a strong relationship with suicidal thoughts:
+
+Inflation rate is highly correlated with:
+Suicidal thoughts, life (r = 0.9759, p = 0.1400)
+Suicidal thoughts, 12 months (r = 0.9727, p = 0.1491)
+The p-values are slightly above 0.05, meaning the results are not statistically significant.
+
+#### CPI is not a strong predictor:
+
+CPI (Consumer Price Index) has a moderate correlation with suicidal thoughts, but the p-values are too high to conclude a meaningful relationship.
