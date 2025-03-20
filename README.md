@@ -27,7 +27,7 @@ This project examines **mental health trends, suicide rates, and socio-economic 
 ### **2. Mental Health Indicators and Suicidal Thoughts Correlation**
 
 | Indicator | Suicide Indicator | Correlation | t-value | p-value |
-|---------------|---------------|---------------|---------------|---------------|
+|----|----|----|----|----|
 | Major depressive episode, life | Suicidal thoughts, life | 1.000 | 38.093 | 0.0167 |
 | Eating disorder, current diagnosed condition | Suicidal thoughts, life | 0.988 | 6.397 | 0.0987 |
 | Generalized anxiety disorder, life | Suicidal thoughts, life | 0.824 | 1.452 | 0.3840 |
@@ -66,7 +66,7 @@ This project examines **mental health trends, suicide rates, and socio-economic 
 ## Data Sources
 
 | **Source** | **Dataset** | **Link** |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Government of Canada | Mental health indicators (2002–2022) | [StatCan Table 13-10-0465-01](https://open.canada.ca/data/dataset/a9863f45-6a1a-4277-ae0f-2d9cb61d413a/resource/2caa55d4-370c-41bc-a662-5ee67da3c074) |
 | Government of Canada | Consumer Price Index (CPI) | [Statistics Canada](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401) |
 | WHO | Global Suicide Rates | [WHO Global Health Data](https://www.who.int/data/gho) |
@@ -78,24 +78,24 @@ This project examines **mental health trends, suicide rates, and socio-economic 
 ### **Machine Learning Models**
 
 | **Model** | **Accuracy** | **Purpose** |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | **Logistic Regression** | **80%** | Binary classification for **suicide risk prediction** |
 | **Random Forest** | **77.78%** | Identifying **feature importance and non-linear relationships** |
 | **SVM (Support Vector Machine)** | **60%** | Detecting complex patterns in **suicide risk classification** |
 
 ------------------------------------------------------------------------
 
-## Snapshot 
+## Snapshot
 
 ![](source_code/Rplot.png)
 
-![](reports/visualizations descriptive/Mental Health Trends by Province.png)
+![](reports/visualizations%20descriptive/Mental%20Health%20Trends%20by%20Province.png)
 
-![](reports/visualizations descriptive/Screenshot 2025-03-19 183036.png)
+![](reports/visualizations%20descriptive/Screenshot%202025-03-19%20183036.png)
 
-![](reports/visualizations descriptive/Screenshot 2025-03-19 183106.png)
+![](reports/visualizations%20descriptive/Screenshot%202025-03-19%20183106.png)
 
-![](reports/visualizations descriptive/Screenshot 2025-03-19 183131.png)
+![](reports/visualizations%20descriptive/Screenshot%202025-03-19%20183131.png)
 
 ## Author
 
